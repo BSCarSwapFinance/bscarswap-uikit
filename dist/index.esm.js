@@ -2224,11 +2224,11 @@ var Accordion = function (_a) {
 var templateObject_1$A, templateObject_2$c;
 
 var MenuLink = function (_a) {
-    var href = _a.href, otherProps = __rest(_a, ["href"]);
+    var href = _a.href, target = _a.target, otherProps = __rest(_a, ["href", "target"]);
     var isHttpLink = href === null || href === void 0 ? void 0 : href.startsWith("http");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     var Tag = isHttpLink ? "a" : NavLink;
-    var props = isHttpLink ? { href: href } : { to: href };
+    var props = isHttpLink ? { href: href, target: target } : { to: href, target: target };
     return React.createElement(Tag, __assign({}, props, otherProps));
 };
 
@@ -2246,7 +2246,7 @@ var PanelBody = function (_a) {
         if (entry.items) {
             return (React.createElement(Accordion, { key: entry.label, isPushed: isPushed, pushNav: pushNav, icon: iconElement, label: entry.label, initialOpenState: entry.initialOpenState, className: calloutClass }, isPushed &&
                 entry.items.map(function (item) { return (React.createElement(MenuEntry, { key: item.href, secondary: true, isActive: item.href === location.pathname, onClick: handleClick },
-                    React.createElement(MenuLink, { href: item.href }, item.label))); })));
+                    React.createElement(MenuLink, { href: item.href, target: item.target }, item.label))); })));
         }
         return (React.createElement(MenuEntry, { key: entry.label, isActive: entry.href === location.pathname, className: calloutClass },
             React.createElement(MenuLink, { href: entry.href, onClick: handleClick },
@@ -2408,46 +2408,53 @@ var Icon$12 = function (props) {
         React.createElement("path", { d: "M6 14.6302L8.32183 15.9883V20.6244L12.3154 22.9424V25.6585L6 21.9824V14.6302Z", fill: "#F0B90B" })));
 };
 
+var ConnectorNames;
+(function (ConnectorNames) {
+    ConnectorNames["Injected"] = "injected";
+    ConnectorNames["WalletConnect"] = "walletconnect";
+    ConnectorNames["BSC"] = "bsc";
+})(ConnectorNames || (ConnectorNames = {}));
+
 var connectors = [
     {
         title: "Metamask",
         icon: Icon$Z,
-        connectorId: "injected",
+        connectorId: ConnectorNames.Injected,
     },
     {
         title: "TrustWallet",
         icon: Icon$10,
-        connectorId: "injected",
+        connectorId: ConnectorNames.Injected,
     },
     {
         title: "MathWallet",
         icon: Icon$_,
-        connectorId: "injected",
+        connectorId: ConnectorNames.Injected,
     },
     {
         title: "TokenPocket",
         icon: Icon$$,
-        connectorId: "injected",
+        connectorId: ConnectorNames.Injected,
     },
     {
         title: "WalletConnect",
         icon: Icon$11,
-        connectorId: "walletconnect",
+        connectorId: ConnectorNames.WalletConnect,
     },
     {
         title: "Binance Chain Wallet",
         icon: Icon$12,
-        connectorId: "bsc",
+        connectorId: ConnectorNames.BSC,
     },
 ];
-var localStorageKey = "accountStatus";
+var connectorLocalStorageKey = "connectorId";
 
 var WalletCard = function (_a) {
     var login = _a.login, walletConfig = _a.walletConfig, onDismiss = _a.onDismiss, mb = _a.mb;
     var title = walletConfig.title, Icon = walletConfig.icon;
     return (React.createElement(Button, { fullWidth: true, variant: "tertiary", onClick: function () {
             login(walletConfig.connectorId);
-            window.localStorage.setItem(localStorageKey, "1");
+            window.localStorage.setItem(connectorLocalStorageKey, "1");
             onDismiss();
         }, style: { justifyContent: "space-between" }, mb: mb, id: "wallet-connect-" + title.toLocaleLowerCase() },
         React.createElement(Text, { bold: true, color: "primary", mr: "16px" }, title),
@@ -2507,7 +2514,7 @@ var AccountModal = function (_a) {
         React.createElement(Flex, { justifyContent: "center" },
             React.createElement(Button, { size: "sm", variant: "secondary", onClick: function () {
                     logout();
-                    window.localStorage.removeItem(localStorageKey);
+                    window.localStorage.removeItem(connectorLocalStorageKey);
                     onDismiss();
                     window.location.reload();
                 } }, "Logout"))));
@@ -2644,14 +2651,6 @@ var Menu = function (_a) {
 };
 var templateObject_1$H, templateObject_2$g, templateObject_3$8, templateObject_4$3, templateObject_5$1, templateObject_6;
 
-var ToastAction = function (_a) {
-    var action = _a.action;
-    if (action.url.startsWith("http")) {
-        return (React.createElement(Button, __assign({ as: "a", size: "sm", href: action.url }, getExternalLinkProps()), action.text));
-    }
-    return (React.createElement(Button, { as: Link$1, size: "sm", to: action.url }, action.text));
-};
-
 var types = {
     SUCCESS: "success",
     DANGER: "danger",
@@ -2666,7 +2665,7 @@ var alertTypeMap = (_a$1 = {},
     _a$1[types.DANGER] = variants$1.DANGER,
     _a$1[types.WARNING] = variants$1.WARNING,
     _a$1);
-var StyledToast = styled.div(templateObject_1$I || (templateObject_1$I = __makeTemplateObject(["\n  right: 16px;\n  position: fixed;\n  max-width: calc(100% - 32px);\n  transition: all 250ms ease-in;\n  width: 100%;\n\n  ", " {\n    max-width: 400px;\n  }\n"], ["\n  right: 16px;\n  position: fixed;\n  max-width: calc(100% - 32px);\n  transition: all 250ms ease-in;\n  width: 100%;\n\n  ", " {\n    max-width: 400px;\n  }\n"])), function (_a) {
+var StyledToast = styled.div(templateObject_1$I || (templateObject_1$I = __makeTemplateObject(["\n  right: 16px;\n  position: fixed;\n  max-width: calc(100% - 32px);\n  transition: all 250ms ease-in;\n  width: 100%;\n  ", " {\n    max-width: 400px;\n  }\n"], ["\n  right: 16px;\n  position: fixed;\n  max-width: calc(100% - 32px);\n  transition: all 250ms ease-in;\n  width: 100%;\n  ", " {\n    max-width: 400px;\n  }\n"])), function (_a) {
     var theme = _a.theme;
     return theme.mediaQueries.sm;
 });
@@ -2675,7 +2674,7 @@ var Toast = function (_a) {
     var timer = useRef();
     var ref = useRef(null);
     var removeHandler = useRef(onRemove);
-    var id = toast.id, title = toast.title, description = toast.description, type = toast.type, action = toast.action;
+    var id = toast.id, title = toast.title, description = toast.description, type = toast.type;
     var handleRemove = useCallback(function () { return removeHandler.current(id); }, [id, removeHandler]);
     var handleMouseEnter = function () {
         clearTimeout(timer.current);
@@ -2701,9 +2700,7 @@ var Toast = function (_a) {
     }, [timer, ttl, handleRemove]);
     return (React.createElement(CSSTransition, __assign({ nodeRef: ref, timeout: 250, style: style }, props),
         React.createElement(StyledToast, { ref: ref, onMouseEnter: handleMouseEnter, onMouseLeave: handleMouseLeave },
-            React.createElement(Alert, { title: title, variant: alertTypeMap[type], onClick: handleRemove }, action ? (React.createElement(React.Fragment, null,
-                React.createElement(Text, { as: "p", mb: "8px" }, description),
-                React.createElement(ToastAction, { action: action }))) : (description)))));
+            React.createElement(Alert, { title: title, variant: alertTypeMap[type], onClick: handleRemove }, description))));
 };
 var templateObject_1$I;
 

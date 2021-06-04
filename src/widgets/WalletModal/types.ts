@@ -15,6 +15,12 @@ export type ConnectorId =
 
 export type Login = (connectorId: ConnectorId) => void;
 
+export enum ConnectorNames {
+  Injected = "injected",
+  WalletConnect = "walletconnect",
+  BSC = "bsc",
+}
+
 export interface Config {
   title: string;
   icon: FC<SvgProps>;

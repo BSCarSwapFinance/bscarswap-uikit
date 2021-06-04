@@ -2237,11 +2237,11 @@ var Accordion = function (_a) {
 var templateObject_1$A, templateObject_2$c;
 
 var MenuLink = function (_a) {
-    var href = _a.href, otherProps = __rest(_a, ["href"]);
+    var href = _a.href, target = _a.target, otherProps = __rest(_a, ["href", "target"]);
     var isHttpLink = href === null || href === void 0 ? void 0 : href.startsWith("http");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     var Tag = isHttpLink ? "a" : reactRouterDom.NavLink;
-    var props = isHttpLink ? { href: href } : { to: href };
+    var props = isHttpLink ? { href: href, target: target } : { to: href, target: target };
     return React__default['default'].createElement(Tag, __assign({}, props, otherProps));
 };
 
@@ -2259,7 +2259,7 @@ var PanelBody = function (_a) {
         if (entry.items) {
             return (React__default['default'].createElement(Accordion, { key: entry.label, isPushed: isPushed, pushNav: pushNav, icon: iconElement, label: entry.label, initialOpenState: entry.initialOpenState, className: calloutClass }, isPushed &&
                 entry.items.map(function (item) { return (React__default['default'].createElement(MenuEntry, { key: item.href, secondary: true, isActive: item.href === location.pathname, onClick: handleClick },
-                    React__default['default'].createElement(MenuLink, { href: item.href }, item.label))); })));
+                    React__default['default'].createElement(MenuLink, { href: item.href, target: item.target }, item.label))); })));
         }
         return (React__default['default'].createElement(MenuEntry, { key: entry.label, isActive: entry.href === location.pathname, className: calloutClass },
             React__default['default'].createElement(MenuLink, { href: entry.href, onClick: handleClick },
@@ -2421,46 +2421,53 @@ var Icon$12 = function (props) {
         React__default['default'].createElement("path", { d: "M6 14.6302L8.32183 15.9883V20.6244L12.3154 22.9424V25.6585L6 21.9824V14.6302Z", fill: "#F0B90B" })));
 };
 
+var ConnectorNames;
+(function (ConnectorNames) {
+    ConnectorNames["Injected"] = "injected";
+    ConnectorNames["WalletConnect"] = "walletconnect";
+    ConnectorNames["BSC"] = "bsc";
+})(ConnectorNames || (ConnectorNames = {}));
+
 var connectors = [
     {
         title: "Metamask",
         icon: Icon$Z,
-        connectorId: "injected",
+        connectorId: ConnectorNames.Injected,
     },
     {
         title: "TrustWallet",
         icon: Icon$10,
-        connectorId: "injected",
+        connectorId: ConnectorNames.Injected,
     },
     {
         title: "MathWallet",
         icon: Icon$_,
-        connectorId: "injected",
+        connectorId: ConnectorNames.Injected,
     },
     {
         title: "TokenPocket",
         icon: Icon$$,
-        connectorId: "injected",
+        connectorId: ConnectorNames.Injected,
     },
     {
         title: "WalletConnect",
         icon: Icon$11,
-        connectorId: "walletconnect",
+        connectorId: ConnectorNames.WalletConnect,
     },
     {
         title: "Binance Chain Wallet",
         icon: Icon$12,
-        connectorId: "bsc",
+        connectorId: ConnectorNames.BSC,
     },
 ];
-var localStorageKey = "accountStatus";
+var connectorLocalStorageKey = "connectorId";
 
 var WalletCard = function (_a) {
     var login = _a.login, walletConfig = _a.walletConfig, onDismiss = _a.onDismiss, mb = _a.mb;
     var title = walletConfig.title, Icon = walletConfig.icon;
     return (React__default['default'].createElement(Button, { fullWidth: true, variant: "tertiary", onClick: function () {
             login(walletConfig.connectorId);
-            window.localStorage.setItem(localStorageKey, "1");
+            window.localStorage.setItem(connectorLocalStorageKey, "1");
             onDismiss();
         }, style: { justifyContent: "space-between" }, mb: mb, id: "wallet-connect-" + title.toLocaleLowerCase() },
         React__default['default'].createElement(Text, { bold: true, color: "primary", mr: "16px" }, title),
@@ -2520,7 +2527,7 @@ var AccountModal = function (_a) {
         React__default['default'].createElement(Flex, { justifyContent: "center" },
             React__default['default'].createElement(Button, { size: "sm", variant: "secondary", onClick: function () {
                     logout();
-                    window.localStorage.removeItem(localStorageKey);
+                    window.localStorage.removeItem(connectorLocalStorageKey);
                     onDismiss();
                     window.location.reload();
                 } }, "Logout"))));
@@ -2657,14 +2664,6 @@ var Menu = function (_a) {
 };
 var templateObject_1$H, templateObject_2$g, templateObject_3$8, templateObject_4$3, templateObject_5$1, templateObject_6;
 
-var ToastAction = function (_a) {
-    var action = _a.action;
-    if (action.url.startsWith("http")) {
-        return (React__default['default'].createElement(Button, __assign({ as: "a", size: "sm", href: action.url }, getExternalLinkProps()), action.text));
-    }
-    return (React__default['default'].createElement(Button, { as: reactRouterDom.Link, size: "sm", to: action.url }, action.text));
-};
-
 var types = {
     SUCCESS: "success",
     DANGER: "danger",
@@ -2679,7 +2678,7 @@ var alertTypeMap = (_a$1 = {},
     _a$1[types.DANGER] = variants$1.DANGER,
     _a$1[types.WARNING] = variants$1.WARNING,
     _a$1);
-var StyledToast = styled__default['default'].div(templateObject_1$I || (templateObject_1$I = __makeTemplateObject(["\n  right: 16px;\n  position: fixed;\n  max-width: calc(100% - 32px);\n  transition: all 250ms ease-in;\n  width: 100%;\n\n  ", " {\n    max-width: 400px;\n  }\n"], ["\n  right: 16px;\n  position: fixed;\n  max-width: calc(100% - 32px);\n  transition: all 250ms ease-in;\n  width: 100%;\n\n  ", " {\n    max-width: 400px;\n  }\n"])), function (_a) {
+var StyledToast = styled__default['default'].div(templateObject_1$I || (templateObject_1$I = __makeTemplateObject(["\n  right: 16px;\n  position: fixed;\n  max-width: calc(100% - 32px);\n  transition: all 250ms ease-in;\n  width: 100%;\n  ", " {\n    max-width: 400px;\n  }\n"], ["\n  right: 16px;\n  position: fixed;\n  max-width: calc(100% - 32px);\n  transition: all 250ms ease-in;\n  width: 100%;\n  ", " {\n    max-width: 400px;\n  }\n"])), function (_a) {
     var theme = _a.theme;
     return theme.mediaQueries.sm;
 });
@@ -2688,7 +2687,7 @@ var Toast = function (_a) {
     var timer = React.useRef();
     var ref = React.useRef(null);
     var removeHandler = React.useRef(onRemove);
-    var id = toast.id, title = toast.title, description = toast.description, type = toast.type, action = toast.action;
+    var id = toast.id, title = toast.title, description = toast.description, type = toast.type;
     var handleRemove = React.useCallback(function () { return removeHandler.current(id); }, [id, removeHandler]);
     var handleMouseEnter = function () {
         clearTimeout(timer.current);
@@ -2714,9 +2713,7 @@ var Toast = function (_a) {
     }, [timer, ttl, handleRemove]);
     return (React__default['default'].createElement(reactTransitionGroup.CSSTransition, __assign({ nodeRef: ref, timeout: 250, style: style }, props),
         React__default['default'].createElement(StyledToast, { ref: ref, onMouseEnter: handleMouseEnter, onMouseLeave: handleMouseLeave },
-            React__default['default'].createElement(Alert, { title: title, variant: alertTypeMap[type], onClick: handleRemove }, action ? (React__default['default'].createElement(React__default['default'].Fragment, null,
-                React__default['default'].createElement(Text, { as: "p", mb: "8px" }, description),
-                React__default['default'].createElement(ToastAction, { action: action }))) : (description)))));
+            React__default['default'].createElement(Alert, { title: title, variant: alertTypeMap[type], onClick: handleRemove }, description))));
 };
 var templateObject_1$I;
 
